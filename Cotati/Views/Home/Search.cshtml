@@ -1,0 +1,41 @@
+﻿@model Cotati.Models.SearchResponse
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<style type="text/css">
+    .green-webpages-url {
+        color: #89c402
+    }
+
+    a {
+        color: #0072c6;
+    }
+</style>
+
+
+
+
+<h13>@Model.SearchRequest</h13>
+
+
+<ul style="list-style:none;padding-top:5vh;padding-left:0vw;margin-top:10vh">
+
+    @foreach (var item in Model.webpages.Value)
+    {
+        <li><a href="@item.Url">@Html.Raw(item.Name)</a></li>
+        <li class="green-webpages-url">@Html.Raw(item.DisplayUrl)</li>
+        <li style="padding-bottom:10px">@Html.Raw(item.Snippet)</li>
+
+        <li style="padding-bottom:10px">
+
+            <a href="@item.Url"></a>
+        </li>
+    }
+</ul>
+
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

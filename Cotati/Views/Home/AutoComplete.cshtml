@@ -1,0 +1,84 @@
+﻿@model Cotati.Models.Suggestions
+
+@{
+    ViewData["Title"] = "AutoComplete";
+}
+
+<h2 style="margin-top:100px">AutoComplete</h2>
+
+
+
+<input id="search" type="text" onkeyup="callAutoComplete()" />
+<ul id="suggestions"></ul>
+
+
+@*
+    @foreach (var sg in Model.SuggestionGroups)
+    {
+
+        @sg.name
+
+
+        <ul>
+            @foreach (var s in sg.SearchSuggestions)
+            {
+
+                <li>@s.displayText</li>
+            }
+        </ul>
+    }
+
+*@
+
+
+<script type="text/javascript">
+
+    function callAutoComplete() {
+
+
+        var search = document.getElementById("search").value;
+
+        if (search.length > 3) {
+
+            alert(search);
+            var uri = '../api/autocomplete/' + search;
+
+            $.getJSON(uri)
+         .done(function (data) {
+             // On success, 'data' contains a list of products.
+             $.each(data.suggestionGroups[0].searchSuggestions, function (key, item) {
+                 // Add a list item for the product.
+                 //$('<li>', { text: formatItem(item) }).appendTo($('#search'));
+                 $("<li>", { text: item.displayText }).appendTo($('#suggestions')).click(function ()
+                 {
+                     //alert('jjj')
+                     var term = $(this).text();
+                     $("#search").val(term);
+                     alert(term);
+
+                     window.location = window.location.protocol + "//" + window.location.host + "/" + "/home/search/?query=" + encodeURI(item.query);
+
+                     @*@Url.Action("Search", "Home", new { query = "plumber in leeds" });*@
+                 });
+             });
+         });
+        }
+
+    }
+
+    function formatItem(item) {
+        return item.Name + ': $' + item.Price;
+    }
+
+    function search(searchTerm) {
+
+        alert('kk');
+
+    }
+
+</script>
+
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
