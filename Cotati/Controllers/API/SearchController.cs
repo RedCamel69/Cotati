@@ -57,7 +57,7 @@ namespace Cotati.Controllers.api
             //searchTerm = "mindfulness in fovant";
 
             // Construct the URI of the search request
-            var uriQuery = uriBase + "?q=" + Uri.EscapeDataString(searchTerm);
+            var uriQuery = uriBase + "?q=" + Uri.EscapeDataString(searchTerm) + "&mkt=en-GB";
 
             // Perform the Web request and get the response
             WebRequest request = HttpWebRequest.Create(uriQuery);

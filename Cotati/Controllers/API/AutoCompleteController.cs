@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Cotati.Models;
+using System.Net;
+using System.IO;
 
 namespace Cotati.Controllers.api
 {
@@ -12,12 +14,47 @@ namespace Cotati.Controllers.api
     [Route("api/AutoComplete")]
     public class AutoCompleteController : Controller
     {
+
+        static string host = "https://api.cognitive.microsoft.com";
+        static string path = "/bing/v7.0/Suggestions";
+
+        // For a list of available markets, go to:
+        // https://docs.microsoft.com/rest/api/cognitiveservices/bing-autosuggest-api-v7-reference#market-codes
+        static string market = "en-UK";
+
+        // NOTE: Replace this example key with a valid subscription key.
+        static string key = "a6672d48b53f4ad9a37fd7b332a88818";
+
         // GET: api/AutoComplete
 
         //public IEnumerable<string> Get()
         [HttpGet("{searchTerm}", Name = "GetAutoComplete")]
         public IActionResult Get(string searchTerm)
         {
+            
+
+            // Construct the URI of the search request
+            var uriQuery = host + path  + "?q=" + Uri.EscapeDataString(searchTerm);
+
+            // Perform the Web request and get the response
+            WebRequest request = HttpWebRequest.Create(uriQuery);
+            request.Headers["Ocp-Apim-Subscription-Key"] = key;
+            HttpWebResponse response = (HttpWebResponse)request.GetResponseAsync().Result;
+            string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
+
+            //// Create result object for return
+            //var searchResult = new Suggestions()
+            //{
+            //    jsonResult = json,
+            //    relevantHeaders = new Dictionary<String, String>()
+            //};
+
+            Suggestions myres = Newtonsoft.Json.JsonConvert.DeserializeObject<Suggestions>(json);
+
+            //Suggestions myres = new Suggestions();
+            return Ok(myres);
+
+         /*
             //return new string[] { "value1", "value2" };
             string res = @"{
   '_type': 'Suggestions',
@@ -82,6 +119,7 @@ namespace Cotati.Controllers.api
 
 
             return Ok(myres);
+            */
         }
 
         // GET: api/AutoComplete/5

@@ -8,8 +8,9 @@
 
 
 
-<input id="search" type="text" onkeyup="callAutoComplete()" />
-<ul id="suggestions"></ul>
+    <input id="search" type="text" onkeyup="callAutoComplete()" />
+    <input type="submit" value="search" onclick="search()" />
+    <ul id="suggestions"></ul>
 
 
 @*
@@ -38,13 +39,15 @@
 
         var search = document.getElementById("search").value;
 
-        if (search.length > 3) {
+        if (search.length > 0) {
 
-            alert(search);
+            //alert(search);
             var uri = '../api/autocomplete/' + search;
 
             $.getJSON(uri)
-         .done(function (data) {
+                .done(function (data) {
+
+                    $('#suggestions').empty();
              // On success, 'data' contains a list of products.
              $.each(data.suggestionGroups[0].searchSuggestions, function (key, item) {
                  // Add a list item for the product.
@@ -54,7 +57,7 @@
                      //alert('jjj')
                      var term = $(this).text();
                      $("#search").val(term);
-                     alert(term);
+                     //alert(term);
 
                      window.location = window.location.protocol + "//" + window.location.host + "/" + "/home/search/?query=" + encodeURI(item.query);
 
@@ -70,9 +73,9 @@
         return item.Name + ': $' + item.Price;
     }
 
-    function search(searchTerm) {
+    function search() {
 
-        alert('kk');
+        window.location = window.location.protocol + "//" + window.location.host + "/" + "/home/search/?query=" + encodeURI($("#search").val());
 
     }
 

@@ -17,7 +17,7 @@ namespace Cotati.Controllers
         //static HttpClient client = new HttpClient();
 
         HttpClient client;
-        string url = "http://localhost:56684/api/search/"; // mindfulness%20in%20fovant";
+        string url = "api/search/"; // mindfulness%20in%20fovant";
         string url2 = "http://localhost:56684/api/autocomplete/fred";
 
         //The HttpClient Class, this will be used for performing 
@@ -26,9 +26,6 @@ namespace Cotati.Controllers
         public HomeController()
         {
             client = new HttpClient();
-            client.BaseAddress = new Uri(url);
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public IActionResult Index()
@@ -57,11 +54,14 @@ namespace Cotati.Controllers
 
         public async Task<ActionResult> Search(string query)
         {
-
+           
+            client.BaseAddress = new Uri(Request.Scheme + "://" + Request.Host + "/" + url);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             // return View(new Car() { Age=78, Name="GM" });
 
-            HttpResponseMessage responseMessage = await client.GetAsync(url + HttpUtility.UrlEncode(query).Replace("+", "%20")); //TODO Sort this shit out
+            HttpResponseMessage responseMessage = await client.GetAsync(client.BaseAddress + "/" +  HttpUtility.UrlEncode(query).Replace("+", "%20")); //TODO Sort this shit out
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
