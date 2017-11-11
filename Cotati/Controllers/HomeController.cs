@@ -69,6 +69,9 @@ namespace Cotati.Controllers
                 //var Employees = JsonConvert.DeserializeObject<List<EmployeeInfo>>(responseData);
                 SearchResponse resp = JsonConvert.DeserializeObject<SearchResponse>(responseData);
 
+
+   
+
                 return View(resp);
             }
             return View("Error");

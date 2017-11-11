@@ -1,4 +1,5 @@
-﻿@model Cotati.Models.SearchResponse
+﻿@using System.Text.RegularExpressions 
+@model Cotati.Models.SearchResponse
 
 @{
     ViewData["Title"] = "Search";
@@ -30,6 +31,15 @@
     }
 </style>
 
+@{ 
+
+    RegexOptions options = RegexOptions.None;
+    Regex regex = new Regex("[ ]{2,}", options);
+    var searchRequestHyperLink = regex.Replace(Model.SearchRequest, " ");
+
+    searchRequestHyperLink= searchRequestHyperLink.Replace(" ", "+");
+
+}
 
 <div class="navbar-row">
     <div class="container">
@@ -38,7 +48,7 @@
                 <div class="navbar-container">
                     <ul class="navbar">
                         <li class="navbar-item navbar-item-active">
-                            <a href="/search?q=mindfulness+fovant" class="navbar-link" data-trans-id="nav_searchoptions_web" data-tabindex="">Web</a>
+                            <a href="~/home/search?query=@searchRequestHyperLink" class="navbar-link" data-trans-id="nav_searchoptions_web" data-tabindex="">Web</a>
                         </li>
                         <li class="navbar-item">
                             <a href="/images?q=mindfulness+fovant" class="navbar-link" data-trans-id="nav_searchoptions_images" data-tabindex="">Images</a>

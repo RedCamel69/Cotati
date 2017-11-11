@@ -14,36 +14,57 @@
     #search{
         width:60vw;
     }
-</style>
-
-<div  class="home">
-  
-
-    <input id="search" type="text" onkeyup="callAutoComplete()" />
-    <input type="submit" value="search" onclick="search()" />
-    <ul id="suggestions"></ul>
-
-</div>
-@*
-    @foreach (var sg in Model.SuggestionGroups)
-    {
-
-        @sg.name
 
 
-        <ul>
-            @foreach (var s in sg.SearchSuggestions)
-            {
-
-                <li>@s.displayText</li>
-            }
-        </ul>
+    .suggestionSelected{
+        background-color:green;
     }
 
-*@
+    .suggestionNotSelected {
+        background-color: azure;
+    }
+
+</style>
+
+
+    <div class="home">
+
+
+        <input id="search" type="text" onkeyup="callPreAutoComplete(event)" autocomplete="off" />
+        <input type="submit" value="search" onclick="search()" />
+        <ul id="suggestions"></ul>
+
+    </div>
+    @*
+        @foreach (var sg in Model.SuggestionGroups)
+        {
+
+            @sg.name
+
+
+            <ul>
+                @foreach (var s in sg.SearchSuggestions)
+                {
+
+                    <li>@s.displayText</li>
+                }
+            </ul>
+        }
+
+    *@
 
 
 <script type="text/javascript">
+
+
+    function callPreAutoComplete(e) {
+        console.log(e.keyCode);
+
+        if (e.keyCode !== 40) {
+
+            callAutoComplete()
+        }
+    }
 
     function callAutoComplete() {
 
@@ -63,7 +84,7 @@
              $.each(data.suggestionGroups[0].searchSuggestions, function (key, item) {
                  // Add a list item for the product.
                  //$('<li>', { text: formatItem(item) }).appendTo($('#search'));
-                 $("<li>", { text: item.displayText }).appendTo($('#suggestions')).click(function ()
+                 $("<li>", { text: item.displayText, class: 'suggestionNotSelected'}).appendTo($('#suggestions')).click(function ()
                  {
                      //alert('jjj')
                      var term = $(this).text();
@@ -87,6 +108,80 @@
     function search() {
 
         window.location = window.location.protocol + "//" + window.location.host + "/" + "/home/search/?query=" + encodeURI($("#search").val());
+
+    }
+
+
+    window.onload = function () {
+        console.log('window - onload'); // 4th
+
+        const node = document.getElementById("search");
+        node.addEventListener('keydown', function (event) {
+            if (event.key === "Enter") {
+                // Do work
+                if (document.getElementById("search").value.length > 0) {
+
+                    search();
+
+                }
+
+            }
+        });
+
+
+        document.onkeydown = checkKey;
+    };
+
+
+   
+
+    function checkKey(e) {
+
+        e = e || window.event;
+
+        if (e.keyCode == '38') {
+            // up arrow
+        }
+        else if (e.keyCode == '40') {
+            // down arrow
+            console.log('down');
+            
+
+            var selectedIndex = $("li.suggestionSelected").index();
+
+          
+
+            var suggestionCount = $("#suggestions li").length;
+
+            //if (selectedIndex === 0) {
+            //    $("#suggestions li")[0].classList.remove("suggestionNotSelected");
+            //    $("#suggestions li")[0].classList.add("suggestionSelected");
+            //}
+           // else {
+                $("#suggestions li").each(function (selectedIndex) { $("#suggestions li")[selectedIndex].classList.remove("suggestionSelected") });
+                $("#suggestions li").each(function (selectedIndex) { $("#suggestions li")[selectedIndex].classList.add("suggestionNotSelected") });
+                
+                if (selectedIndex < suggestionCount-1)
+                    selectedIndex++;
+                else {
+                    selectedIndex = 0;
+
+                }
+                $("#suggestions li")[selectedIndex].classList.remove("suggestionNotSelected");
+
+
+                $("#suggestions li")[selectedIndex].classList.add("suggestionSelected");
+                $("#search").val($("#suggestions li")[selectedIndex].innerText);
+         //}
+                
+
+        }
+        else if (e.keyCode == '37') {
+            // left arrow
+        }
+        else if (e.keyCode == '39') {
+            // right arrow
+        }
 
     }
 

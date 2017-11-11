@@ -20,7 +20,7 @@ namespace Cotati.Controllers.api
 
         // For a list of available markets, go to:
         // https://docs.microsoft.com/rest/api/cognitiveservices/bing-autosuggest-api-v7-reference#market-codes
-        static string market = "en-UK";
+        static string market = "en-gb";
 
         // NOTE: Replace this example key with a valid subscription key.
         static string key = "a6672d48b53f4ad9a37fd7b332a88818";
@@ -31,29 +31,32 @@ namespace Cotati.Controllers.api
         [HttpGet("{searchTerm}", Name = "GetAutoComplete")]
         public IActionResult Get(string searchTerm)
         {
-            
 
-            // Construct the URI of the search request
-            var uriQuery = host + path  + "?q=" + Uri.EscapeDataString(searchTerm);
+            try
+            {
 
-            // Perform the Web request and get the response
-            WebRequest request = HttpWebRequest.Create(uriQuery);
-            request.Headers["Ocp-Apim-Subscription-Key"] = key;
-            HttpWebResponse response = (HttpWebResponse)request.GetResponseAsync().Result;
-            string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                // Construct the URI of the search request
+                var uriQuery = host + path + "?q=" + Uri.EscapeDataString(searchTerm);
 
-            //// Create result object for return
-            //var searchResult = new Suggestions()
-            //{
-            //    jsonResult = json,
-            //    relevantHeaders = new Dictionary<String, String>()
-            //};
+                // Perform the Web request and get the response
+                WebRequest request = HttpWebRequest.Create(uriQuery);
 
-            Suggestions myres = Newtonsoft.Json.JsonConvert.DeserializeObject<Suggestions>(json);
+                request.Headers["Ocp-Apim-Subscription-Key"] = key;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponseAsync().Result;
+                string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
 
-            //Suggestions myres = new Suggestions();
-            return Ok(myres);
 
+                Suggestions myres = Newtonsoft.Json.JsonConvert.DeserializeObject<Suggestions>(json);
+
+                return Ok(myres);
+
+            }
+            catch(Exception ex)
+            {
+                //just swallow for now
+                System.Diagnostics.Debug.Print(ex.Message);
+                return Ok();
+            }
          /*
             //return new string[] { "value1", "value2" };
             string res = @"{
