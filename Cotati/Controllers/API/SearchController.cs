@@ -46,7 +46,9 @@ namespace Cotati.Controllers.api
 
 
             // Replace the accessKey string value with your valid access key.
-            const string accessKey = "a6672d48b53f4ad9a37fd7b332a88818";
+            //const string accessKey = "a6672d48b53f4ad9a37fd7b332a88818";
+            const string accessKey = "509b0bba9b624d8083f078826958b2a9";
+            
 
             // Verify the endpoint URI.  At this writing, only one endpoint is used for Bing
             // search APIs.  In the future, regional endpoints may be available.  If you

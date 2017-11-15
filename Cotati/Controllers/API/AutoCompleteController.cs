@@ -23,7 +23,8 @@ namespace Cotati.Controllers.api
         static string market = "en-gb";
 
         // NOTE: Replace this example key with a valid subscription key.
-        static string key = "a6672d48b53f4ad9a37fd7b332a88818";
+       // static string key = "a6672d48b53f4ad9a37fd7b332a88818";
+        static string key = "509b0bba9b624d8083f078826958b2a9";
 
         // GET: api/AutoComplete
 
